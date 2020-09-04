@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6",
+    "rootDir": "./src/",
+    "lib": ["ESNext", "DOM"],
+    "experimentalDecorators": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*.ts", "client/src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

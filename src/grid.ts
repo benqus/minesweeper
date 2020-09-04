@@ -1,6 +1,5 @@
 export type Coord = [ number, number ];
-export type Row = Array<number>;
-export type Grid = Array<Row>;
+export type Grid = Array<Array<number>>;
 
 export function genereateCoord(maxX: number, maxY: number): Coord {
   const x = Math.floor(Math.random() * maxX)
@@ -8,38 +7,35 @@ export function genereateCoord(maxX: number, maxY: number): Coord {
   return [ x, y ];
 }
 
-export function generateMines(grid: Grid, mines: number, maxX: number, maxY: number) {
+export function generateMines(grid: Grid, mines: number, maxX: number, maxY: number): Grid {
   const mineCoords: Record<string, boolean> = {};
-  let i = 0;
+  let i: number = 0;
   while (i < mines) {
     const [ x, y ] = genereateCoord(maxX, maxY);
-    const cell = `${x}:${y}`;
+    const cell: string = `${x}:${y}`;
     if (!mineCoords[cell]) {
       mineCoords[cell] = true;
       grid[y][x] = 9;
       i++;
     }
   }
-  console.log(mineCoords);
   return grid;
 }
 
-
-export function generateGrid(width: number, height: number, mines: number): Grid {
-  // create grid rows
+export function createGrid(columns: number, rows: number): Grid {
   const grid: Grid = [];
-  for (let i = 0; i < height; i++) {
-    // create one row
-    const row = (new Array(width)).fill(0);
+  for (let i = 0; i < rows; i++) {
+    const row: Array<number> = new Array(columns);
+    row.fill(0);
     grid.push(row);
   }
-
-  return generateMines(grid, mines, width, height);
+  return grid;
 }
 
-const grid = generateGrid(3, 5, 10);
-console.log(grid);
-
+export function generateGrid(columns: number, rows: number, mines: number): Grid {
+  const grid: Grid = createGrid(columns, rows);
+  return generateMines(grid, mines, columns, rows);
+}
 
 // TODO
 // 1. calculate how many mines each cell is neighbour with
