@@ -30,15 +30,19 @@ export default class Game {
 
   private _revealCellNeighbours(row: number, col: number): void {
     const cell: Cell = this.grid.getCell(row, col);
-    if (!cell || this.grid.isMineCell(row, col)) return;
+    if (!cell || cell.hasMine) return;
 
     this.grid.revealCell(row, col);
 
     if (cell.isEmpty) {
-      this._revealNeighbourCell(row+1, col);   // N
-      this._revealNeighbourCell(row,   col+1); // E
-      this._revealNeighbourCell(row-1, col);   // S
+      this._revealNeighbourCell(row-1, col-1); // NW
+      this._revealNeighbourCell(row-1, col);   // N
+      this._revealNeighbourCell(row-1, col+1); // NE
       this._revealNeighbourCell(row,   col-1); // W
+      this._revealNeighbourCell(row,   col+1); // E
+      this._revealNeighbourCell(row+1, col-1); // SW
+      this._revealNeighbourCell(row+1, col);   // S
+      this._revealNeighbourCell(row+1, col+1); // SE
     }
   }
 

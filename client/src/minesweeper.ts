@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, internalProperty } from 'lit-element';
+import { LitElement, html, css, customElement, internalProperty } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import axios from 'axios';
 import { GamePayload, GameState, Cell } from './types';
@@ -9,6 +9,14 @@ let wsConnection: WebSocket;
 
 @customElement('imgarena-minesweeper')
 export default class IMGArenaMinesweeper extends LitElement {
+
+  static get styles() {
+    return css`
+      .row {
+        white-space: nowrap;
+      }
+    `;
+  }
 
   private player: number = null;
 
@@ -95,7 +103,7 @@ export default class IMGArenaMinesweeper extends LitElement {
       <div class="grid">
         ${repeat(this.status.game.grid, ((_, i) => i), (row: Array<Cell>, i: number) =>
           html`
-            <div>
+            <div class="row">
               ${repeat(row, ({ hasMine, value, revealed }: Cell, c: number) =>
                 html`<cell-button @click=${e => this.revealCell(i, c)} .value=${value} .has-mine=${hasMine} .revealed=${revealed}></cell-button>`
               )}
