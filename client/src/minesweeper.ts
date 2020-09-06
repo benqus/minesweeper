@@ -77,17 +77,14 @@ export default class IMGArenaMinesweeper extends LitElement {
 
   get renderGameState() {
     if (!this.status) return null;
-    let state: string = 'ready';
-    switch (this.status.game.state) {
-      case GameState.PLAYING: state = 'playing'; break;
-      case GameState.SUCCESS: state = 'success'; break;
-      case GameState.FAIL: state = 'fail'; break;
-      case GameState.READY:
-      default:
-        break;
-    }
+    const { state } = this.status.game;
+    const myTurn: boolean = (this.player === this.status.game.currentPlayer);
+    let message: string = 'ready';
+    if (state === GameState.READY || state === GameState.PLAYING) message = myTurn ? 'Your turn' : 'Waiting for other player';
+    if (state === GameState.SUCCESS) message = `You ${myTurn ? 'win' : 'lose'}!`;
+    if (state === GameState.FAIL) message = `You ${!myTurn ? 'win' : 'lose'}!`;
     return html`
-      <p>${state}</p>
+      <p>${message}</p>
       ${this.player != null ? html`<button @click=${e => this.resetGame()}>reset</button>` : null}
     `;
   }
