@@ -67,6 +67,7 @@ export default class Game {
   
       if (this.mines === this.grid.cellsLeft) {
         this._state = GameState.SUCCESS;
+        this.grid.reveal();
       } else {
         this.togglePlayers();
       }  
