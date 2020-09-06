@@ -14,10 +14,12 @@ export default class Game {
   private _state: GameState;
   private _currentPlayer: 0 | 1;
 
+  public onupdate = () => {};
+
   constructor(
-    public rows: number = 5,
-    public columns: number = 5,
-    public mines: number = 5,
+    public rows: number = 10,
+    public columns: number = 10,
+    public mines: number = 10,
   ) {}
 
   private _revealNeighbourCell(r: number, c: number): void {
@@ -59,16 +61,18 @@ export default class Game {
     const blewUp: boolean = this.grid.revealCell(row, col);
     if (blewUp) {
       this._state = GameState.FAIL;
-      return;
-    }
-
-    this._revealCellNeighbours(row, col);
-
-    if (this.mines === this.grid.cellsLeft) {
-      this._state = GameState.SUCCESS;
+      this.grid.reveal();
     } else {
-      this.togglePlayers();
+      this._revealCellNeighbours(row, col);
+  
+      if (this.mines === this.grid.cellsLeft) {
+        this._state = GameState.SUCCESS;
+      } else {
+        this.togglePlayers();
+      }  
     }
+
+    this.onupdate();
   }
 
   public togglePlayers(): void {
@@ -83,6 +87,8 @@ export default class Game {
 
     this._grid = this._grid || new Grid();
     this._grid.populate(template);
+
+    this.onupdate();
   }
 
   public toJSON() {

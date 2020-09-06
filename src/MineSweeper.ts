@@ -56,6 +56,11 @@ export class Row {
     return cell.reveal(); // cell doesn't have mine
   }
 
+  public reveal(): boolean {
+    this._cells.forEach((c: Cell) => c.reveal());
+    return true;
+  }
+
   public toJSON() {
     return this._cells.map(c => c.toJSON());
   }
@@ -97,6 +102,11 @@ export class Grid {
   public revealCell(r: number, c: number): boolean {
     const row: Row = this.rows[r];
     return row.revealCell(c);
+  }
+
+  public reveal(): boolean {
+    this.rows.forEach((r: Row) => r.reveal());
+    return true;
   }
 
   public toJSON() {
