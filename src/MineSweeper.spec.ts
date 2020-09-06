@@ -77,6 +77,14 @@ describe('Row', () => {
     ]);
   });
 
+  it('cellsLeft', () => {
+    const row = Row.create([0, 1, 9, 2, 9]);
+    expect(row.cellsLeft).to.equal(5);
+    row.revealCell(0);
+    row.revealCell(1);
+    expect(row.cellsLeft).to.equal(3);
+  });
+
 });
 
 
@@ -142,7 +150,7 @@ describe('Grid', () => {
     ]);
   });
 
-  it('reveal empty cell', () => {
+  it('reveal mine cell', () => {
     const template = [
       [0, 2, 9, 2],
       [0, 2, 9, 2],
