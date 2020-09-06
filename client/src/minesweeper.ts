@@ -18,28 +18,31 @@ export default class IMGArenaMinesweeper extends LitElement {
     `;
   }
 
-  private player: number = null;
+  @internalProperty()
+  player: number = null;
 
   @internalProperty()
   status: GamePayload = null;
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
-    this.loadGame();
-  }
-
-  async loadGame(): Promise<void> {
     const { data } = await axios.get<GamePayload>('http://localhost:4000/game');
     this.status = data;
   }
 
+  disconnectedCallback() {
+    if (wsConnection) wsConnection.close();
+    super.disconnectedCallback();
+  }
+
   joinGame(player: number): void {
     this.player = player;
+    // keeping things simple here now but I'd prefer connection management to be in a separate module
     const connection: WebSocket = new WebSocket(`ws://localhost:4000/minesweeper?player=${player}`);
     connection.onopen = () => wsConnection = connection;
     connection.onmessage = ({ data }: MessageEvent) => this.status = JSON.parse(data);
     connection.onclose = () => {
-      // TODO reconnect, unless manually closed
+      // unless manually closed, reconnect timeout can be implemented here
     };
   }
 
@@ -69,6 +72,7 @@ export default class IMGArenaMinesweeper extends LitElement {
 
   get renderPlayers() {
     if (!this.status) return html`<p>Loading game...</p>`;
+    if (this.player != null) return html`<p>You are Player ${this.player}</p>`;
     const parts = [];
     if (this.status.players.indexOf(0) === -1) parts.push(0);
     if (this.status.players.indexOf(1) === -1) parts.push(1);

@@ -1,11 +1,11 @@
 {
   "name": "minesweeper",
   "version": "1.0.0",
-  "description": "",
+  "description": "Turn-based Minsweeper game",
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "build": "parcel build ./client/index.html -d ./client/dist",
+    "build": "parcel build ./client/index.html -d ./client/dist --no-cache",
     "start:client": "parcel serve ./client/index.html -d ./client/dist",
     "start:dev": "ts-node-dev ./src/index.ts",
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts",

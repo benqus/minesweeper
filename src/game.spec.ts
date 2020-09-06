@@ -56,7 +56,7 @@ describe('Game', () => {
 
     expect(state).to.equal(GameState.SUCCESS);
     expect(currentPlayer).to.equal(0);
-    expect(cellsLeft).to.equal(1);
+    expect(cellsLeft).to.equal(0);
   });
 
   it('reveal a non-empty cell only', () => {

@@ -10,20 +10,6 @@ const { PORT } = process.env;
 const server = createServer(app);
 
 const connectedPlayers: Map<number, WebSocket> = new Map();
-
-function getGamePayload() {
-  return {
-    game: game.toJSON(),
-    players: [ ...connectedPlayers.keys() ]
-  };
-}
-
-function sendGamePayload(socket: WebSocket): void {
-  const json = getGamePayload()
-  const payload: string = JSON.stringify(json);
-  socket.send(payload);
-}
-
 const game: Game = Game.create();
 game.onupdate = () => {
   wss.clients.forEach((socket: WebSocket) => {
@@ -33,6 +19,21 @@ game.onupdate = () => {
   });
 };
 
+function getGamePayload() {
+  return {
+    game: game.toJSON(),
+    players: [ ...connectedPlayers.keys() ]
+  };
+}
+
+function sendGamePayload(socket: WebSocket): void {
+  const json = getGamePayload();
+  const payload: string = JSON.stringify(json);
+  socket.send(payload);
+}
+
+// ideally game/session management and game state broadcasting
+// would be separated into a module but keeping it simple for now
 app.set('getGamePayload', getGamePayload);
 app.set('resetGame', () => game.reset());
 
@@ -64,4 +65,5 @@ server.on('upgrade', (req: IncomingMessage, socket: Socket, head) => {
   return wss.handleUpgrade(req, socket, head, (ws: WebSocket) => wss.emit('connection', ws, req, player));
 });
 
+// could use dontenv but for this exercise this works fine just as well
 server.listen(PORT || 4000, () => console.log(server.address()));
