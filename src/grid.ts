@@ -1,5 +1,11 @@
 export type Coord = [ number, number ];
-export type Grid = Array<Array<number>>;
+export type Template = number[][];
+
+export function incrementCell(grid: number[][], x: number, y: number): void {
+  if (grid[x] && grid[x][y] != null && grid[x][y] !== 9) {
+    grid[x][y] += 1;
+  }
+}
 
 export function genereateCoord(maxX: number, maxY: number): Coord {
   const x = Math.floor(Math.random() * maxX)
@@ -7,23 +13,23 @@ export function genereateCoord(maxX: number, maxY: number): Coord {
   return [ x, y ];
 }
 
-export function updateCellsAroundMine(grid: Grid, mineX: number, mineY: number): Grid {
-  let x: number = mineX - 1;
-  while (x <= mineX + 1) {
-    let y: number = mineY - 1;
-    while (y <= mineY + 1) {
-      const isMineCell: boolean = (x === mineX && y === mineY);
-      if (!isMineCell && grid[x] && !isNaN(grid[x][y])) {
-        grid[x][y] += 1;
-      }
-      y++;
-    }
-    x++;
-  }
+export function updateCellsAroundMine(grid: Template, x: number, y: number): Template {
+  // 3 neighbouring cells in the row above
+  incrementCell(grid, x-1, y-1);
+  incrementCell(grid, x-1, y);
+  incrementCell(grid, x-1, y+1);
+  // same row
+  incrementCell(grid, x, y-1);
+  incrementCell(grid, x, y+1);
+  // 3 neighbouring cells in the row below
+  incrementCell(grid, x+1, y-1);
+  incrementCell(grid, x+1, y);
+  incrementCell(grid, x+1, y+1);
+
   return grid;
 }
 
-export function generateMines(grid: Grid, mines: number, maxX: number, maxY: number): Array<Coord> {
+export function generateMines(grid: Template, mines: number, maxX: number, maxY: number): Array<Coord> {
   const mineCoordsIndex: Record<string, boolean> = {};
   const coords: Array<Coord> = [];
   let i: number = 0;
@@ -41,8 +47,8 @@ export function generateMines(grid: Grid, mines: number, maxX: number, maxY: num
   return coords;
 }
 
-export function createGrid(rows: number, columns: number): Grid {
-  const grid: Grid = [];
+export function createGrid(rows: number, columns: number): Template {
+  const grid: Template = [];
   for (let i = 0; i < rows; i++) {
     const row: Array<number> = new Array(columns);
     row.fill(0);
@@ -51,16 +57,9 @@ export function createGrid(rows: number, columns: number): Grid {
   return grid;
 }
 
-export function generateGrid(rows: number, columns: number, mines: number): Grid {
-  const grid: Grid = createGrid(rows, columns);
+export function generateGrid(rows: number, columns: number, mines: number): Template {
+  const grid: Template = createGrid(rows, columns);
   const mineCoords: Array<Coord> = generateMines(grid, mines, rows, columns);
   mineCoords.forEach(([x, y]: Coord) => updateCellsAroundMine(grid, x, y));
   return grid;
 }
-
-// TODO
-// 1. calculate how many mines each cell is neighbour with
-// 2. API for turn-based minesweeper game
-//   - update clients as grid is updated
-//   - tests
-

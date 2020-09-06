@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Game from './game';
+import Game from './Game';
 import { GameState } from './types';
 
 describe('Game', () => {
@@ -43,7 +43,7 @@ describe('Game', () => {
     expect(cellsLeft).to.equal(4);
   });
 
-  it.only('reveal an empty cell and neighbour cells', () => {
+  it('reveal an empty cell and neighbour cells', () => {
     const game = Game.create(5, 5, 1, [
       [0, 0, 0, 0, 0],
       [0, 1, 1, 1, 0],

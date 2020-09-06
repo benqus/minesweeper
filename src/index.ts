@@ -4,7 +4,7 @@ import qs from 'querystring';
 import { Socket } from 'net';
 import WebSocket, { Server, Data } from 'ws';
 import app from './app';
-import Game from './game';
+import Game from './Game';
 
 const { PORT } = process.env;
 const server = createServer(app);
@@ -24,13 +24,7 @@ function sendGamePayload(socket: WebSocket): void {
   socket.send(payload);
 }
 
-const game: Game = Game.create(5, 5, 4, [
-  [1,1,2,1,1],
-  [1,9,2,9,1],
-  [2,2,4,2,2],
-  [1,9,2,9,1],
-  [1,1,2,1,1],
-]);
+const game: Game = Game.create();
 game.onupdate = () => {
   wss.clients.forEach((socket: WebSocket) => {
     if (socket.readyState === WebSocket.OPEN) {

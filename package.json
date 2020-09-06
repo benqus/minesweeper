@@ -9,7 +9,7 @@
     "start:client": "parcel serve ./client/index.html -d ./client/dist",
     "start:dev": "ts-node-dev ./src/index.ts",
     "test": "mocha -r ts-node/register ./src/**/*.spec.ts",
-    "postinstall": "npm run build"
+    "postinstall": "npm t && npm run build"
   },
   "repository": {
     "type": "git",
